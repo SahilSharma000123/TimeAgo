@@ -4,6 +4,7 @@ namespace Drupal\timeago\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Class TimeAgoSettingsForm.
@@ -98,11 +99,13 @@ class TimeAgoSettingsForm extends FormBase
       '#collapsed' => TRUE,
     ];
 
-    $form['SaveConfiguration'] = [
-      '#type' => 'button',
-      '#value' => t('save configuration'),
-
+    $form['#attached']['library'][] = 'timeago/timeago';
+    $form['actions'] = ['#type' => 'actions'];
+    $form['actions']['submit'] = [
+      '#type' => 'submit',
+      '#value' => t('Save Configuration'),
     ];
+
 //    if (timeago_library_detect_languages()) {
 //      $form['settings']['strings']['warning'] = [
 //        '#markup' => '<div class="messages warning">' . t('JavaScript translation files have been detected in the Timeago library. The following settings will not be used unless you remove those files.') . '</div>',
@@ -148,10 +151,48 @@ class TimeAgoSettingsForm extends FormBase
   {
     // Display result.
 
-    foreach ($form_state->getValues() as $key => $value) {
-      drupal_set_message($key . ': ' . $value);
+    $node = Node::load('68');
+
+    $timestamp = $node->getCreatedTime();
+
+
+    $node = Node::load('68');
+
+    $timestamp = $node->getCreatedTime();
+
+
+    function get_time_ago($time)
+    {
+      $time_difference = time() - $time;
+
+      if ($time_difference < 1) {
+        return 'less than 1 second ago';
+      }
+      $condition = array(12 * 30 * 24 * 60 * 60 => 'year',
+        30 * 24 * 60 * 60 => 'month',
+        24 * 60 * 60 => 'day',
+        60 * 60 => 'hour',
+        60 => 'minute',
+        1 => 'second'
+      );
+
+      foreach ($condition as $secs => $str) {
+        $d = $time_difference / $secs;
+
+        if ($d >= 1) {
+          $t = round($d);
+          return $t . ' ' . $str . ($t > 1 ? 's' : '') . ' ago';
+        }
+      }
     }
 
-  }
+    $node->setCreatedTime($timestamp - 1);
 
+
+//    print_r(get_time_ago($timestamp));
+//    die();
+
+
+
+  }
 }
