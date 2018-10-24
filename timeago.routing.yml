@@ -1,0 +1,9 @@
+
+timeago.time_ago_settings_form:
+  path: '/timeago/form/time_ago_settings'
+  defaults:
+    _form: '\Drupal\timeago\Form\TimeAgoSettingsForm'
+    _title: 'TimeAgoSettingsForm'
+  requirements:
+    _access: 'TRUE'
+  

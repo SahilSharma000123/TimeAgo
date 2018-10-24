@@ -1,0 +1,16 @@
+timeago:
+  version: 1.x
+  js:
+    js/timeago.js: {}
+
+  dependencies:
+  - core/jquery
+
+
+jquery.timeago:
+  version: 1.x
+  js:
+    js/jquery.timeago.js: {}
+
+  dependencies:
+  - core/jquery
